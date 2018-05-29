@@ -10,6 +10,8 @@
 
 @implementation JTBTopBar
 
-
+//- (instancetype)initWithFrame:(CGRect)frame style:(JTBVideoViewShowType)style {
+//    
+//}
 
 @end

@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#define JTBTopBarColor  [UIColor blackColor]
+
 typedef NS_ENUM(NSUInteger, JTBVideoViewShowType) {
     JTBVideoViewShowTypeSmall,  // 小屏幕 ...聊天界面的
     JTBVideoViewShowTypeSingle, // 全屏 ... 朋友圈界面的

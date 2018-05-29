@@ -15,37 +15,47 @@
 
 //会话强引用  一定要强引用
 @property (nonatomic,strong) AVCaptureSession *captureSession;
+@property (nonatomic,strong) AVCaptureVideoPreviewLayer *previewLayer;
 
 @end
 
+static JTBSmallVideoViewController *__currentVideoVC = nil;
+
+
 @implementation JTBSmallVideoViewController
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    [self setupVideo];
-    UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(30, 64, 50, 50)];
-    [btn addTarget:self action:@selector(takeBtnClick) forControlEvents:UIControlEventTouchUpInside];
-    btn.backgroundColor =  [UIColor redColor];
-    [self.view addSubview:btn];
-}
 
-- (void)takeBtnClick {
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (void)dealloc {
-    NSLog(@"dealloc --销毁---JTBSmallVideoViewController");
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
 - (void)startAnimationWithType:(JTBVideoViewShowType)type {
     _type = type;
+    __currentVideoVC = self;
+    [self setupSubViews];
+    
+    if (_type ==  JTBVideoViewShowTypeSingle) {
+        jtb_dispatch_after(0.4, ^{
+            self.view.hidden = NO;
+        });
+    }
+    
+    [self setupVideo];
+    
+    
+    UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(30, 64, 50, 50)];
+    [btn addTarget:self action:@selector(colseView) forControlEvents:UIControlEventTouchUpInside];
+    btn.backgroundColor =  [UIColor blueColor];
+    [self.view addSubview:btn];
 }
+#pragma mark 页面设置
+- (void)setupSubViews  {
+    _view = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    self.view.backgroundColor = [UIColor redColor];
+    self.view.hidden = YES;
+    UIWindow *keyWindow = [UIApplication sharedApplication].delegate.window;
+    [keyWindow addSubview:self.view];
+    
 
+}
+#pragma 设备设置
 - (void)setupVideo {
     if (TARGET_IPHONE_SIMULATOR) {
         return;
@@ -65,9 +75,10 @@
     AVCaptureVideoPreviewLayer *previewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:_captureSession];
     previewLayer.frame = self.view.bounds;
     [self.view.layer addSublayer:previewLayer];
+    _previewLayer = previewLayer;
 }
 
-#pragma 摄像头设置
+
 - (void)setupSession {
     AVCaptureSession *captureSession = [[AVCaptureSession alloc] init];
     _captureSession = captureSession;
@@ -137,7 +148,7 @@
 }
 
 
-#pragma mark 代理方法
+#pragma mark 设备代理方法
 /*
  CMSampleBufferRef:帧缓存，描述当前帧信息
  获取数据：CMSampleBufferGet
@@ -146,6 +157,20 @@
 - (void)captureOutput:(AVCaptureOutput *)output didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection {
     
     
+}
+
+#pragma mark 界面销毁后
+
+- (void)colseView {
+    [_captureSession stopRunning];
+    [_previewLayer removeFromSuperlayer];
+    _previewLayer = nil;
+    [self.view removeFromSuperview];
+    __currentVideoVC = nil;
+}
+
+- (void)dealloc {
+    NSLog(@"dealloc --销毁---JTBSmallVideoViewController");
 }
 
 

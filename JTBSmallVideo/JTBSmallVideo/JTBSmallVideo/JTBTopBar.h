@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "JTBVideoConfig.h"
 
 @interface JTBTopBar : UIView
+
+- (instancetype)initWithFrame:(CGRect)frame style:(JTBVideoViewShowType)style;
 
 @end

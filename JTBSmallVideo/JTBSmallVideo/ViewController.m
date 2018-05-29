@@ -28,7 +28,7 @@
     JTBSmallVideoViewController *videoVC = [[JTBSmallVideoViewController alloc] init];
 //    videoVC.delegate = self;
     [videoVC startAnimationWithType:JTBVideoViewShowTypeSingle];
-    [self  presentViewController:videoVC animated:YES completion:nil];
+//    [self  presentViewController:videoVC animated:YES completion:nil];
 }
 
 

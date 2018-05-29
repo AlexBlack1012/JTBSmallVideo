@@ -9,7 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "JTBVideoConfig.h"
 
-@interface JTBSmallVideoViewController : UIViewController
+@interface JTBSmallVideoViewController : NSObject
+
+//主界面
+@property (nonatomic, strong, readonly) UIView *view;
 
 
 - (void)startAnimationWithType:(JTBVideoViewShowType)type;
